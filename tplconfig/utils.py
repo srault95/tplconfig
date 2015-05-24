@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import socket
 
 _BOOLEANS = {'1': True, 'yes': True, 'true': True, 'on': True,
              '0': False, 'no': False, 'false': False, 'off': False}
@@ -80,5 +81,20 @@ def cpu_count():
     import multiprocessing
     return multiprocessing.cpu_count()
 
+def TODOget_public_ip():
+    """Get public IP address."""
+    data = str(urlopen('http://www.realip.info/api/p/realip.php').read())
+    return data.split('"')[3]
 
+def first_ip(**kwargs):
+    return socket.gethostbyname(socket.gethostname())
+
+"""
+fqdn: renvoyé par python -c "import socket; print socket.gethostname()"
+ns397840.ip-37-187-147.eu ou par envoy sur hostname -f
+"""
+
+MY_FUNCTIONS = {
+    'FIRST_IP': first_ip
+}
     

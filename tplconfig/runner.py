@@ -17,7 +17,7 @@ def main():
     )
 
     parser.add_argument('-C', '--config', 
-                        default=os.environ.get('SETTINGS', 'yaml://config.yml'), 
+                        default=os.environ.get('TPLCONFIG_SETTINGS', 'yaml://config.yml'), 
                         dest='config_path',
                         help='Config file path. [default: %(default)s]'
                         )
@@ -34,7 +34,7 @@ def main():
 
     parser.add_argument('-t', '--templates-package',
                         dest='templates_package',
-                        default=os.environ.get('TPLCONFIG_TMPL_PACKAGE', None), 
+                        default=os.environ.get('TPLCONFIG_PACKAGE', None), 
                         help='Template package (search in PYTHONPATH)'
     )
     
@@ -43,9 +43,9 @@ def main():
                         'code 1 if an environment variable is missing'
     )
     
-    #parser.add_argument('--environ', action="store_true",
-    #                    dest='parse_env',
-    #                    help='Parse environment')
+    parser.add_argument('--environ', action="store_true",
+                        dest='parse_env',
+                        help='Parse environment')
 
     parser.add_argument('--cache-path',
                         dest='config_cache',
@@ -82,7 +82,7 @@ def main():
     kwargs = Config(config_from=config_path,
                        silent=False, 
                        upper_only=False, 
-                       #parse_env=args.parse_env
+                       parse_env=args.parse_env
                        ).items
     
     if args.debug or args.display_config:
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     tplconfig/tests/resources/config.conf    
     
     # pour un template dans un package déclaré dans PYTHONPATH
-    export TPLCONFIG_TMPL_PACKAGE=tplconfig.tests.resources.templates_package
+    export TPLCONFIG_PACKAGE=tplconfig.tests.resources.templates_package
     python -m tplconfig.runner -i conf/postfix/main.cf.tpl -C yaml://config.default.yml
 
     # ou:

@@ -41,6 +41,8 @@ else:
     except ImportError:
         from yaml import Loader as YAMLLoader, Dumper as YAMLDumper
 
+from . import utils
+
 def load_class(name):
     """Load class in module by name string
 
@@ -177,6 +179,34 @@ class Config(object):
 
         return self.get(*args, **kwargs)
 
+
+def replace_with(kwargs):
+
+    values = {}
+    
+    for k, v in kwargs.iteritems():
+        
+        #TODO: if list, verifier chaque valeur de la liste ?
+        
+        if isinstance(v, dict):
+            values[k] = replace_with(v)
+        else:
+            if isinstance(v, (str, unicode)):
+                if v.startswith("ENV_"):
+                    key_env = v[4:]
+                    value_env = os.environ.get(key_env, None)
+                    values[k] = value_env
+                elif v.startswith("FUNC_"):
+                    key_func = v[5:]
+                    func = utils.MY_FUNCTIONS.get(key_func, None)
+                    if func:
+                        values[k] = func(key=k, **values)
+            else:
+                values[k] = v
+    
+    return values
+
+        
 
 
 def config_from_http(url=None, silent=False, BANNED_SETTINGS=[], upper_only=False, to_lower=False, debug=False, **kwargs):
@@ -331,20 +361,9 @@ def config_from_yaml(filepath=None, fileobj=None, silent=False, BANNED_SETTINGS=
         if silent is False:
             raise
 
-    """
     if parse_env:
-        raise NotImplementedError()
-        for k, v in dict_update.iteritems():
-            print "k, v : ", k, v, type(v)
-            #postfix {'enable': True, 'banner': '$myhostname', 'myhostname': 'ENV_TEST_HOSTNAME'} <type 'dict'>
-            #TODO: tester si v est un string
-            if v.startswith('ENV_'):
-                key_env = v[4:]
-                #TODO: option error si not found
-                value_env = os.environ.get(key_env, None)
-                dict_update[k] = value_env
-    """
-    
+        dict_update = replace_with(dict_update.copy())        
+        
     return dict_update
 
 def config_from_env(start_name=None, environ=None, debug=False, **kwargs):

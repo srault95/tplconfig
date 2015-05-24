@@ -7,11 +7,12 @@ from StringIO import StringIO
 
 from tplconfig.config_from import config_from_yaml
 
+HOME_ENV = os.environ.get('HOME', None)
+
 CONFIG = """
 postfix:
   enable: true
-  myhostname: ENV_TEST_HOSTNAME
-  banner: $myhostname
+  home: ENV_HOME
 """
     
 def test_config_yaml():
@@ -21,15 +22,14 @@ def test_config_yaml():
     assert "postfix" in result
     assert result['postfix']['enable'] is True 
     
-@unittest.skip("TODO")
+#@unittest.skip("TODO")
 def test_config_yaml_with_env():
-    assert False, "Not Implemented"
-    os.environ['TEST_HOSTNAME'] = 'MYHOST'
+    #assert False, "Not Implemented"
     fileobj = StringIO(CONFIG)
     result = config_from_yaml(fileobj=fileobj, silent=True, upper_only=False, parse_env=True)
-    fileobj.close()    
-    assert "postfix" in result
-    assert result['postfix']['myhostname'] == 'MYHOST' 
+    fileobj.close()
+    print result
+    assert result['postfix']['home'] == HOME_ENV    
 
 def myprint(d, newdict):
     for k, v in d.copy().iteritems():
@@ -45,10 +45,24 @@ def myprint2(d):
             yield {k:myprint2(v)}
         else:
             yield {k:v}
-          
-@unittest.skip("TODO")
+            
+def myprint3(kwargs):
+    values = {}
+    
+    for k, v in kwargs.iteritems():
+        if isinstance(v, dict):
+            values[k] = myprint3(v)
+        else:
+            if v.startswith("ENV_"):
+                values[k] = "REPLACEENV"
+            else:
+                values[k] = v
+    
+    return values        
+
+#@unittest.skip("TODO")
 def test_dict_recursif():
-    assert False, "Not Implemented"
+    #assert False, "Not Implemented"
     """
     types
     """
@@ -56,17 +70,23 @@ def test_dict_recursif():
         'postfix': {
             'key': 'value',
             'keydict': {
-                'v1': "MOI"
+                'v1': "ENV_XXX",
+                'v2': {
+                    'sub_v2': "ENV_YYY"
+                }
             } 
         }
     }
     newdict = {}
-    #myprint(values, newdict)
-    #myprint2(values, newdict)
+
     print ""
     print "--------------------"
-    for v in myprint2(values):
-        print v
+    new_values = myprint3(values)
+    
+    print "new_values : ", new_values.keys()
+    
+    for k, v in new_values.items():
+        print k, v
     print "--------------------"
     
     import pprint

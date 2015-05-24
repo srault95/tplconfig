@@ -66,16 +66,43 @@ Structure d'un package python avec des templates
         templates/system/resolv.conf.tpl
 
 
+Variables d'environnement une configuration
+-------------------------------------------
+
+Si vous utiliser ENV_MYVAR comme valeur, tplconfig cherchera dans l'environnement la variable 
+MYVAR et l'utilisera en remplacement de ENV_MYVAR
+
+**Exemple avec une configuration YAML:**
+
+::
+
+    hosts:
+        - 1.1.1.1
+        - 2.2.2.2
+    hostname: ENV_HOSTNAME
+        
+**La configuration deviendra:**
+
+::
+
+    # En admettant que votre HOSTNAME renvoi mx1
+
+    {
+        'hosts': ['1.1.1.1', '2.2.2.2'],
+        'hostname': 'mx1'
+    }
+
+
 Environnement
 -------------
 
-SETTINGS
-::::::::
+TPLCONFIG_SETTINGS
+::::::::::::::::::
 
 default: yaml://config.yml
 
-TPLCONFIG_TMPL_PACKAGE
-::::::::::::::::::::::
+TPLCONFIG_PACKAGE
+:::::::::::::::::
 
 default: None
 
