@@ -43,9 +43,9 @@ def main():
                         'code 1 if an environment variable is missing'
     )
     
-    parser.add_argument('--environ', action="store_true",
-                        dest='parse_env',
-                        help='Parse environment')
+    #parser.add_argument('--environ', action="store_true",
+    #                    dest='parse_env',
+    #                    help='Parse environment')
 
     parser.add_argument('--cache-path',
                         dest='config_cache',
@@ -82,7 +82,7 @@ def main():
     kwargs = Config(config_from=config_path,
                        silent=False, 
                        upper_only=False, 
-                       parse_env=args.parse_env
+                       parse_env=True #args.parse_env
                        ).items
     
     if args.debug or args.display_config:
