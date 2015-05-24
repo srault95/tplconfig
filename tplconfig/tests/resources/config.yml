@@ -1,0 +1,9 @@
+var_dict:
+  attr_str: value
+  attr_list_number: [1,2,3]
+  attr_bool: true
+  
+var_str: test  
+
+config:
+  test: mytest

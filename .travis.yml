@@ -1,0 +1,20 @@
+language: python
+
+python:
+  - "2.7"
+
+install:
+  - pip install -U pip
+  - pip install -e .
+
+script:
+  - nosetests -s -v tplconfig
+
+branches:
+  only:
+    - master
+    
+notifications:
+  email: true
+  on_success: always
+  on_failure: always
