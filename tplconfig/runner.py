@@ -80,10 +80,10 @@ def main():
             config_path = "yaml://%s" % args.config_cache
     
     kwargs = Config(config_from=config_path,
-                       silent=False, 
-                       upper_only=False, 
-                       parse_env=True #args.parse_env
-                       ).items
+                    silent=False, 
+                    upper_only=False, 
+                    parse_env=True #args.parse_env
+                    ).items
     
     if args.debug or args.display_config:
         print ""

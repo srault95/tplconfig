@@ -192,15 +192,19 @@ def replace_with(kwargs):
             values[k] = replace_with(v)
         else:
             if isinstance(v, (str, unicode)):
+                
                 if v.startswith("ENV_"):
                     key_env = v[4:]
                     value_env = os.environ.get(key_env, None)
                     values[k] = value_env
+                
                 elif v.startswith("FUNC_"):
                     key_func = v[5:]
                     func = utils.MY_FUNCTIONS.get(key_func, None)
                     if func:
                         values[k] = func(key=k, **values)
+                    else:
+                        values[k] = v
             else:
                 values[k] = v
     
