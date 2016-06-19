@@ -3,8 +3,9 @@
 import sys
 import pprint
 import os
-import types
-import urlparse
+
+import six
+from six.moves.urllib.parse import urlparse
 
 jsonmod = None
 
@@ -17,10 +18,7 @@ for mod in priority:
     else:
         break
 
-try:    
-    from cStringIO  import StringIO    
-except ImportError, err:
-    from StringIO import StringIO
+from six import StringIO
 
 try:
     import requests
@@ -33,7 +31,7 @@ try:
     from yaml import load as yaml_load    
     from yaml import dump as yaml_dump    
     HAVE_YAML = True
-except ImportError, err:
+except ImportError as err:
     HAVE_YAML = False
 else:
     try:
@@ -53,7 +51,7 @@ def load_class(name):
     if not name:
         return None
 
-    if type(name) == types.ClassType:
+    if type(name) in six.class_types:
         return name
     
     if not "." in name: 
@@ -184,14 +182,14 @@ def replace_with(kwargs):
 
     values = {}
     
-    for k, v in kwargs.iteritems():
+    for k, v in six.iteritems(kwargs):
         
         #TODO: if list, verifier chaque valeur de la liste ?
         
         if isinstance(v, dict):
             values[k] = replace_with(v)
         else:
-            if isinstance(v, (str, unicode)):
+            if isinstance(v, six.string_types):
                 
                 if v.startswith("ENV_"):
                     key_env = v[4:]
@@ -239,7 +237,7 @@ def config_from_http(url=None, silent=False, BANNED_SETTINGS=[], upper_only=Fals
             raise
 
     try:
-        for k, v in config.iteritems():
+        for k, v in six.iteritems(config):
             
             if upper_only and not k.isupper():
                 continue
@@ -296,7 +294,7 @@ def config_from_json(filepath=None, fileobj=None, json_loader=None, silent=False
             raise
 
     try:
-        for k, v in config.iteritems():
+        for k, v in six.iteritems(config):
             
             if upper_only and not k.isupper():
                 continue
@@ -353,7 +351,7 @@ def config_from_yaml(filepath=None, fileobj=None, silent=False, BANNED_SETTINGS=
             raise
 
     try:
-        for k, v in config.iteritems():
+        for k, v in six.iteritems(config):
             
             if upper_only and not k.isupper():
                 continue
@@ -394,11 +392,11 @@ def config_from_object(obj=None, silent=False, BANNED_SETTINGS=[], upper_only=Tr
     >>> config.has_key('VAR1')
     True
         
-    >>> config = config_from_object("config_loader.tests.resources.dummy:Test1")
+    >>> config = config_from_object("tplconfig.tests.resources.dummy:Test1")
     >>> config.has_key('VAR1')
     True
     
-    >>> config = config_from_object("config_loader.tests.dummy", upper_only=False)
+    >>> config = config_from_object("tplconfig.tests.dummy", upper_only=False)
     >>> config.has_key('Test1')
     True
     
@@ -413,7 +411,7 @@ def config_from_object(obj=None, silent=False, BANNED_SETTINGS=[], upper_only=Tr
     try:
         base_settings = obj
         
-        if isinstance(obj, (str, unicode)):
+        if isinstance(obj, six.string_types):
             base_settings = load_module(obj)
         
         for k in dir(base_settings):
@@ -486,13 +484,13 @@ def _test():
 if __name__ == "__main__":
     #Usage: python config_from.py --test
     """
-    nosetests -s -v --with-doctest config_loader
+    nosetests -s -v --with-doctest tplconfig
     
     Linux:
-    TEST_HOSTNAME=MYTEST -m config_loader.config_from --test
+    TEST_HOSTNAME=MYTEST -m tplconfig.config_from --test
     Win:
     set TEST_HOSTNAME=MYTEST
-    python -m config_loader.config_from --test
+    python -m tplconfig.config_from --test
     """
     import sys
     import logging

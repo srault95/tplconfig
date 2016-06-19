@@ -13,21 +13,6 @@ yaml_config = os.path.realpath(os.path.join(RESOURCES, 'config.yml'))
 json_config = os.path.abspath(os.path.join(RESOURCES, 'config.json'))
 #python_config = os.path.abspath(os.path.join(RESOURCES, 'config.yml'))
 
-"""
-"config_loader.tests.resources.dummy:Test1"
-
-        python://
-        env://
-        yaml://
-        json://
-        http://, https://
-        http://httpbin.org/get
-            "origin": "88.175.183.38",
-            "url": "http://httpbin.org/get    
-            
-        https://httpbin.org/get?show_env=1                
-"""
-
 class ConfigTestCase(unittest.TestCase):
     
     def setUp(self):
@@ -67,14 +52,14 @@ class ConfigTestCase(unittest.TestCase):
         
     def test_config_from_object(self):
         
-        config = Config(config_from="python://config_loader.tests.resources.dummy")
+        config = Config(config_from="python://tplconfig.tests.resources.dummy")
         self.assertEquals(config('VAR4', None), 'var4')
         self.assertIsNone(config('bad_var', None))
         
-        config = Config(config_from="python://config_loader.tests.resources.dummy:Test1")
+        config = Config(config_from="python://tplconfig.tests.resources.dummy:Test1")
         self.assertEquals(config('VAR1', None), 'var1')
         
-        config = Config(config_from="python://config_loader.tests.resources.dummy:Test2")
+        config = Config(config_from="python://tplconfig.tests.resources.dummy:Test2")
         self.assertEquals(config('VAR1', None), 'var1')
 
     def test_config_from_env(self):

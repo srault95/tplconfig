@@ -18,6 +18,7 @@ setup(
     include_package_data=True,
     packages=('tplconfig',),
     install_requires=[
+        'six',
         'jinja2',
         'PyYAML',
         'requests',
@@ -40,6 +41,8 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'License :: OSI Approved :: BSD License',
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators'

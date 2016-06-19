@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from StringIO import StringIO
+from six import StringIO
 
 from jinja2 import TemplateNotFound
 
@@ -43,7 +43,7 @@ def test_bad_value_in_template():
                      output_filename='-', 
                      kwargs=dict())    
         assert False, "exception not raised"
-    except Fatal, err:
+    except Fatal as err:
         assert str(err) == "'config' is undefined"
     
 def test_template_not_found():
@@ -53,7 +53,7 @@ def test_template_not_found():
                      output_filename='-', 
                      kwargs=dict())    
         assert False, "exception not raised"
-    except TemplateNotFound, err:
+    except TemplateNotFound as err:
         assert err.templates == ['notfoundtemplate.html']
 
 def test_templates_package_not_found():

@@ -3,7 +3,8 @@
 import unittest
 
 import os
-from StringIO import StringIO
+from six import StringIO
+import six
 
 from tplconfig.config_from import config_from_yaml
 
@@ -28,11 +29,11 @@ def test_config_yaml_with_env():
     fileobj = StringIO(CONFIG)
     result = config_from_yaml(fileobj=fileobj, silent=True, upper_only=False, parse_env=True)
     fileobj.close()
-    print result
+    print(result)
     assert result['postfix']['home'] == HOME_ENV    
 
 def myprint(d, newdict):
-    for k, v in d.copy().iteritems():
+    for k, v in six.iteritems(d.copy()):
         if isinstance(v, dict):
             myprint(v, newdict)
         else:
@@ -40,7 +41,7 @@ def myprint(d, newdict):
           #print "myprint : {0} : {1}".format(k, v)
           
 def myprint2(d):
-    for k, v in d.iteritems():
+    for k, v in six.iteritems(d):
         if isinstance(v, dict):
             yield {k:myprint2(v)}
         else:
@@ -49,7 +50,7 @@ def myprint2(d):
 def myprint3(kwargs):
     values = {}
     
-    for k, v in kwargs.iteritems():
+    for k, v in six.iteritems(kwargs):
         if isinstance(v, dict):
             values[k] = myprint3(v)
         else:
@@ -79,15 +80,15 @@ def test_dict_recursif():
     }
     newdict = {}
 
-    print ""
-    print "--------------------"
+    print("")
+    print("--------------------")
     new_values = myprint3(values)
     
-    print "new_values : ", new_values.keys()
+    print("new_values : ", new_values.keys())
     
     for k, v in new_values.items():
-        print k, v
-    print "--------------------"
+        print(k, v)
+    print("--------------------")
     
     import pprint
     #print "newdict : "
