@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import os
-import sys
-
 from setuptools import setup, find_packages
 
-from tplconfig.version import __VERSION__
+from tplconfig.version import version_str
 
 setup(
     name='tplconfig',
-    version=__VERSION__,
+    version=version_str(),
     description='Configuration with jinja templates',
     author='Stéphane RAULT',
     author_email='stephane.rault@radicalspam.org',
     url='https://github.com/srault95/tplconfig', 
     license='BSD',
     include_package_data=True,
-    packages=('tplconfig',),
+    packages=find_packages(),
     install_requires=[
         'six',
         'jinja2',
