@@ -8,7 +8,7 @@ from pprint import pprint as pp
 
 from tplconfig.jinja_config import Fatal, process_file
 
-from config_from import Config, export_config
+from tplconfig.config_from import Config, export_config
 
 def main():
     
